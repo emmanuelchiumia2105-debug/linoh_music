@@ -285,22 +285,63 @@
 
 
     // Play a song
-    function playSong(audioUrl, title, artist) {
+    function playSong(audioUrl, title, artist, songId,coverUrl) {
 
-        currentSong = audioUrl;
+    currentSong = audioUrl;
 
-        audioPlayer.src = audioUrl;
+    audioPlayer.src = audioUrl;
 
-        playerTitle.textContent = title;
+    playerTitle.textContent = title;
 
-        playerArtist.textContent = artist;
+    playerArtist.textContent = artist;
+    if (coverUrl) {
 
-        audioPlayer.play();
+    playerCover.innerHTML = `
+        <img
+            src="${coverUrl}"
+            class="rounded"
+            style="width: 50px; height: 50px; object-fit: cover;"
+            alt="${title}"
+        >
+    `;
 
-        playPauseBtn.innerHTML =
-            '<i class="bi bi-pause-fill"></i>';
-    }
+} else {
 
+    playerCover.innerHTML =
+        '<i class="bi bi-music-note-beamed fs-4"></i>';
+
+}
+
+    audioPlayer.play();
+
+    playPauseBtn.innerHTML =
+        '<i class="bi bi-pause-fill"></i>';
+
+
+    // Record the play
+    fetch(`/song/${songId}/play/`)
+        .then(response => response.json())
+        .then(data => {
+
+            if (data.success) {
+
+                console.log(
+                    `Play recorded. Total plays: ${data.plays}`
+                );
+
+            }
+
+        })
+        .catch(error => {
+
+            console.error(
+                "Could not record play:",
+                error
+            );
+
+        });
+
+}
 
     // Play / Pause
     playPauseBtn.addEventListener("click", function () {

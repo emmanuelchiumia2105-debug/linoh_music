@@ -121,7 +121,7 @@ Linoh Music - Discover Great Music
 
                         <button
                             class="btn btn-primary btn-sm"
-                            onclick="playSong('{{ song.audio_file.url }}', '{{ song.title }}', '{{ song.artist.name }}')"
+                            onclick="playSong('{{ song.audio_file.url }}', '{{ song.title }}', '{{ song.artist.name }}', '{{ song.id }}',  '{% if song.cover %}{{ song.cover.url }}{% endif %}')"
                         >
                             <i class="bi bi-play-fill"></i>
                             Play
@@ -306,7 +306,9 @@ Linoh Music - Discover Great Music
                             onclick="playSong(
                                 '{{ song.audio_file.url }}',
                                 '{{ song.title }}',
-                                '{{ song.artist.name }}'
+                                '{{ song.artist.name }}',
+                                '{{ song.id }}',
+                                '{% if song.cover %}{{ song.cover.url }}{% endif %}'
                             )"
                         >
 
@@ -414,7 +416,7 @@ Linoh Music - Discover Great Music
 
                     <button
                         class="btn btn-primary btn-sm"
-                        onclick="playSong('{{ song.audio_file.url }}', '{{ song.title }}', '{{ song.artist.name }}')"
+                        onclick="playSong('{{ song.audio_file.url }}', '{{ song.title }}', '{{ song.artist.name }}','{{ song.id }}' , '{% if song.cover %}{{ song.cover.url }}{% endif %}')"
                     >
                         <i class="bi bi-play-fill"></i>
                     </button>

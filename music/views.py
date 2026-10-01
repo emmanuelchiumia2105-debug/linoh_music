@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.utils import timezone
-
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
 from .models import Song, ChartHistory
 
 
@@ -63,3 +64,16 @@ def home(request):
         "music/home.html",
         context
     )
+
+def record_play(request, song_id):
+
+    song = get_object_or_404(Song, id=song_id)
+
+    song.plays += 1
+
+    song.save(update_fields=["plays"])
+
+    return JsonResponse({
+        "success": True,
+        "plays": song.plays,
+    })
