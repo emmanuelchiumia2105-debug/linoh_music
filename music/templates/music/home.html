@@ -1,0 +1,455 @@
+{% extends "music/base.html" %}
+
+{% block title %}
+Linoh Music - Discover Great Music
+{% endblock %}
+
+
+{% block content %}
+
+<!-- Hero -->
+<section class="bg-dark text-white py-5">
+
+    <div class="container py-5">
+
+        <div class="row align-items-center">
+
+            <div class="col-lg-7">
+
+                <h1 class="display-3 fw-bold">
+                    Discover Great Music
+                </h1>
+
+                <p class="lead text-light">
+                    Listen, discover and download music from your
+                    favorite artists on Linoh Music.
+                </p>
+
+                <!-- Search -->
+                <form class="mt-4">
+
+                    <div class="input-group input-group-lg">
+
+                        <input
+                            type="search"
+                            class="form-control"
+                            placeholder="Search songs, artists or albums..."
+                        >
+
+                        <button class="btn btn-primary" type="submit">
+                            <i class="bi bi-search"></i>
+                            Search
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+            <div class="col-lg-5 text-center mt-5 mt-lg-0">
+
+                <i
+                    class="bi bi-music-note-beamed"
+                    style="font-size: 180px;">
+                </i>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- Trending songs -->
+<!-- Trending Songs -->
+<section class="container py-5">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold">
+            <i class="bi bi-fire text-danger"></i>
+            Trending Songs
+        </h2>
+
+        <a href="#" class="btn btn-outline-dark">
+            View All
+        </a>
+    </div>
+
+    <div class="row g-4">
+
+        {% for song in trending_songs %}
+
+        <div class="col-md-6 col-lg-3">
+
+            <div class="card h-100 shadow-sm">
+
+                {% if song.cover %}
+                    <img
+                        src="{{ song.cover.url }}"
+                        class="card-img-top"
+                        style="height: 220px; object-fit: cover;"
+                        alt="{{ song.title }}"
+                    >
+                {% else %}
+                    <div
+                        class="bg-dark text-white d-flex align-items-center justify-content-center"
+                        style="height: 220px;"
+                    >
+                        <i class="bi bi-music-note-beamed display-1"></i>
+                    </div>
+                {% endif %}
+
+                <div class="card-body">
+
+                    <h5 class="card-title">
+                        {{ song.title }}
+                    </h5>
+
+                    <p class="text-muted mb-2">
+                        {{ song.artist.name }}
+                    </p>
+
+                    <small class="text-muted">
+                        <i class="bi bi-headphones"></i>
+                        {{ song.plays }} plays
+                    </small>
+
+                    <div class="mt-3">
+
+                        <button
+                            class="btn btn-primary btn-sm"
+                            onclick="playSong('{{ song.audio_file.url }}', '{{ song.title }}', '{{ song.artist.name }}')"
+                        >
+                            <i class="bi bi-play-fill"></i>
+                            Play
+                        </button>
+
+                        {% if song.allow_download %}
+                            <a
+                                href="{{ song.audio_file.url }}"
+                                download
+                                class="btn btn-outline-success btn-sm"
+                            >
+                                <i class="bi bi-download"></i>
+                            </a>
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        {% empty %}
+
+        <div class="col-12">
+            <div class="alert alert-info">
+                No songs have been uploaded yet.
+            </div>
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</section>
+
+
+<!-- Music Chart -->
+<!-- Linoh Music Chart -->
+<!-- Linoh Music Chart -->
+<section class="bg-dark text-white py-5">
+
+    <div class="container">
+
+        <!-- Chart Header -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+
+            <div>
+                <h2 class="fw-bold mb-1">
+                    <i class="bi bi-bar-chart-fill"></i>
+                    Linoh Music Chart
+                </h2>
+
+                <p class="text-secondary mb-0">
+                    Top songs based on plays
+                </p>
+            </div>
+
+            <a href="#" class="btn btn-outline-light">
+                View Full Chart
+            </a>
+
+        </div>
+
+
+        <!-- Chart Songs -->
+        <div class="list-group">
+
+            {% for song in chart_songs %}
+
+            <div class="list-group-item bg-dark text-white border-secondary">
+
+                <div class="row align-items-center">
+
+
+                    <!-- Movement + Current Rank -->
+                    <div class="col-auto text-center" style="min-width: 75px;">
+
+                        {% if song.movement_type == "up" %}
+
+                            <div class="text-success fw-bold">
+                                <i class="bi bi-arrow-up"></i>
+                                {{ song.movement }}
+                            </div>
+
+                        {% elif song.movement_type == "down" %}
+
+                            <div class="text-danger fw-bold">
+                                <i class="bi bi-arrow-down"></i>
+                                {{ song.movement }}
+                            </div>
+
+                        {% elif song.movement_type == "same" %}
+
+                            <div class="text-secondary fw-bold">
+                                <i class="bi bi-dash"></i>
+                            </div>
+
+                        {% elif song.movement_type == "new" %}
+
+                            <div class="text-primary fw-bold">
+                                NEW
+                            </div>
+
+                        {% endif %}
+
+                        <div class="fs-4 fw-bold">
+                            #{{ song.current_rank }}
+                        </div>
+
+                    </div>
+
+
+                    <!-- Song Cover -->
+                    <div class="col-auto">
+
+                        {% if song.cover %}
+
+                            <img
+                                src="{{ song.cover.url }}"
+                                width="65"
+                                height="65"
+                                class="rounded"
+                                style="object-fit: cover;"
+                                alt="{{ song.title }}"
+                            >
+
+                        {% else %}
+
+                            <div
+                                class="rounded bg-secondary d-flex align-items-center justify-content-center"
+                                style="width:65px;height:65px;"
+                            >
+                                <i class="bi bi-music-note-beamed fs-3"></i>
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- Song Information -->
+                    <div class="col">
+
+                        <h6 class="mb-1 fw-bold">
+                            {{ song.title }}
+                        </h6>
+
+                        <small class="text-secondary">
+
+                            {{ song.artist.name }}
+
+                            {% if song.album %}
+                                • {{ song.album.title }}
+                            {% endif %}
+
+                        </small>
+
+                    </div>
+
+
+                    <!-- Play Count -->
+                    <div class="col-auto text-end">
+
+                        <div class="small text-secondary">
+
+                            <i class="bi bi-headphones"></i>
+
+                            {{ song.plays }} plays
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Play Button -->
+                    <div class="col-auto">
+
+                        <button
+                            class="btn btn-primary btn-sm"
+                            onclick="playSong(
+                                '{{ song.audio_file.url }}',
+                                '{{ song.title }}',
+                                '{{ song.artist.name }}'
+                            )"
+                        >
+
+                            <i class="bi bi-play-fill"></i>
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            {% empty %}
+
+            <!-- No Songs -->
+            <div class="text-center py-5 text-secondary">
+
+                <i class="bi bi-music-note-list display-4"></i>
+
+                <p class="mt-3 mb-0">
+                    No chart songs available yet.
+                </p>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- Latest songs -->
+<!-- Latest Songs -->
+<section class="container py-5">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <h2 class="fw-bold">
+            <i class="bi bi-clock-history"></i>
+            Latest Songs
+        </h2>
+
+        <a href="#" class="btn btn-outline-dark">
+            View All
+        </a>
+
+    </div>
+
+    <div class="list-group shadow-sm">
+
+        {% for song in latest_songs %}
+
+        <div class="list-group-item">
+
+            <div class="row align-items-center">
+
+                <div class="col-auto">
+
+                    {% if song.cover %}
+
+                        <img
+                            src="{{ song.cover.url }}"
+                            width="60"
+                            height="60"
+                            class="rounded"
+                            style="object-fit: cover;"
+                            alt="{{ song.title }}"
+                        >
+
+                    {% else %}
+
+                        <div
+                            class="bg-dark text-white rounded d-flex align-items-center justify-content-center"
+                            style="width:60px;height:60px;"
+                        >
+                            <i class="bi bi-music-note"></i>
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+                <div class="col">
+
+                    <h6 class="mb-1">
+                        {{ song.title }}
+                    </h6>
+
+                    <small class="text-muted">
+                        {{ song.artist.name }}
+
+                        {% if song.album %}
+                            • {{ song.album.title }}
+                        {% endif %}
+                    </small>
+
+                </div>
+
+                <div class="col-auto">
+
+                    <button
+                        class="btn btn-primary btn-sm"
+                        onclick="playSong('{{ song.audio_file.url }}', '{{ song.title }}', '{{ song.artist.name }}')"
+                    >
+                        <i class="bi bi-play-fill"></i>
+                    </button>
+
+                    {% if song.allow_download %}
+
+                        <a
+                            href="{{ song.audio_file.url }}"
+                            download
+                            class="btn btn-success btn-sm"
+                        >
+                            <i class="bi bi-download"></i>
+                        </a>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+        {% empty %}
+
+        <div class="list-group-item text-center text-muted">
+            No songs available yet.
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</section>
+
+<!-- Footer spacing because player is fixed -->
+<div style="height: 100px;"></div>
+
+{% endblock %}
